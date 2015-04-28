@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="finedev.com.ulsanbus.bus.BusDetailFragment">
+
+    <LinearLayout
+        android:id="@+id/linearLayout_direction_button_container"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/toggleButton_direction_first"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textOff="@string/sample"
+            android:textOn="@string/sample" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton_direction_second"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textOff="@string/sample"
+            android:textOn="@string/sample" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView_bus_summary"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sample" />
+
+    <TextView
+        android:id="@+id/textView_bus_interval"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sample" />
+
+    <ListView
+        android:id="@+id/listView_bus_route"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    </ListView>
+
+</LinearLayout>

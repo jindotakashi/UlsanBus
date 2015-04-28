@@ -1,0 +1,90 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:background="@android:color/white"
+            android:divider="#FFAAAAAA"
+            android:dividerHeight="1dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editText_search_station"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:divider="#FFAAAAAA"
+                    android:hint="정류소 이름 입력"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:paddingLeft="10dp"
+                    android:background="@android:color/white"
+                    android:singleLine="true"
+                    android:textAlignment="center"
+                    android:textSize="16sp"></EditText>
+
+                <ImageView
+                    android:id="@+id/imageView_search_in_station"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/find_grey"
+                    android:background="@drawable/drawer_selector"
+                    android:padding="3dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFAAAAAA" />
+
+        <TextView
+            android:id="@+id/textView_recent_search_history_in_station"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/recent_search_history" />
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@android:color/white">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <ListView
+                    android:id="@+id/listView_station_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"
+                    android:clipToPadding="false"
+                    android:divider="#fff4f4f4"
+                    android:dividerHeight="0.1dp"
+                    android:fastScrollEnabled="true"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+
+</FrameLayout>

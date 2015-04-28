@@ -1,0 +1,2 @@
+include ':app', ':PinnedSectionListView'
+project(':PinnedSectionListView').projectDir = new File('libs/pinned-section-listview-library')

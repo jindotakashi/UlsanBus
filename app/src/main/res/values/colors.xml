@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <color name="actionbar_light_grey">#31f4f2f2</color>
+    <color name="list_light_gray">#FFF4F2F2</color>
+    <color name="list_header_gray">#fff5f5f5</color>
+    <color name="main_color">#FF000000</color>
+    <color name="main_tab_bottom_color">#FFFFFFFF</color>
+    <color name="progress_color">#FF3F51B5</color>
+    <color name="list_header_color">#fffefefe</color>
+    <color name="list_header_text_color">#ffa0a0a0</color>
+    <color name="gray_item_bg">#1d000000</color>
+    <color name="ok_button_background_color">#0f000000</color>
+    <color name="cancel_button_background_color">#ffEFEFEF</color>
+    <color name="confirm_button_background_color">#FFF44336</color>
+    <color name="white">#FFFFFFFF</color>
+    <!-- adapter -->
+    <color name="GREENSEA">#16a085</color>
+    <color name="ARRIVE">#e74c3c</color>
+    <color name="ORANGE">#f39c12</color>
+    <color name="CLOUDS">#ecf0f1</color>
+    <color name="MIDNIGHTBLUE">#2c3e50</color>
+    <color name="PETERRIVER">#3498db</color>
+    <color name="WETASPHALT">#34495e</color>
+    <color name="NO_INFO">#ffb7cacb</color>
+    <color name="NOT_ARRIVE">#7f8c8d</color>
+
+
+    <!--THEME_INDIGO, THEME_RED, THEME_PINK, THEME_PURPLE, THEME_DEEP_PURPLE, THEME_BLUE, THEME_LIGHT_BLUE, THEME_CYAN, THEME_TEAL, THEME_GREEN, THEME_LIGHT_GREEN, THEME_DEEP_ORANGE, THEME_BROWN, THEME_BLUE_GREY, THEME_BLACK-->
+    <!-- Theme Colors-->
+
+    <!-- INDIGO -->
+    <color name="theme_color_indigo_main">#FF3F51B5</color>
+    <color name="theme_color_indigo_system">#FF1A237E</color>
+    <!-- RED -->
+    <color name="theme_color_red_main">#FFF44336</color>
+    <color name="theme_color_red_system">#FFB71C1C</color>
+    <!-- PINK -->
+    <color name="theme_color_pink_main">#FFE91E63</color>
+    <color name="theme_color_pink_system">#FF880E4F</color>
+    <!-- PURPLE -->
+    <color name="theme_color_purple_main">#FF9C27B0</color>
+    <color name="theme_color_purple_system">#FF4A148C</color>
+    <!-- DEEP PURPLE -->
+    <color name="theme_color_deep_purple_main">#FF673AB7</color>
+    <color name="theme_color_deep_purple_system">#FF311B92</color>
+    <!-- BLUE -->
+    <color name="theme_color_blue_main">#FF2196F3</color>
+    <color name="theme_color_blue_system">#FF0D47A1</color>
+    <!-- LIGHT BLUE -->
+    <color name="theme_color_light_blue_main">#FF03A9F4</color>
+    <color name="theme_color_light_blue_system">#FF01579B</color>
+    <!-- CYAN -->
+    <color name="theme_color_cyan_main">#FF00BCD4</color>
+    <color name="theme_color_cyan_system">#FF006064</color>
+    <!-- TEAL -->
+    <color name="theme_color_teal_main">#FF009688</color>
+    <color name="theme_color_teal_system">#FF004D40</color>
+    <!-- GREEN -->
+    <color name="theme_color_green_main">#FF4CAF50</color>
+    <color name="theme_color_green_system">#FF1B5E20</color>
+    <!-- LIGHT_GREEN -->
+    <color name="theme_color_light_green_main">#FF8BC34A</color>
+    <color name="theme_color_light_green_system">#FF33691E</color>
+    <!-- DEEP_ORANGE -->
+    <color name="theme_color_deep_orange_main">#FFFF5722</color>
+    <color name="theme_color_deep_orange_system">#FFBF360C</color>
+
+    <!-- BROWN -->
+    <color name="theme_color_brown_main">#FF795548</color>
+    <color name="theme_color_brown_system">#FF3E2723</color>
+
+    <!-- BLUE_GREY -->
+    <color name="theme_color_blue_grey_main">#FF607D8B</color>
+    <color name="theme_color_blue_grey_system">#FF263238</color>
+
+    <!-- BLACK -->
+    <color name="theme_color_black_main">#FF000000</color>
+    <color name="theme_color_black_system">#FF000000</color>
+
+</resources>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_height">
+
+    <TextView
+        android:id="@+id/textView_bus_stop_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/sample" />
+
+    <TextView
+        android:id="@+id/textView_bus_stop_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:text="@string/sample" />
+
+    <RelativeLayout
+        android:layout_width="40dp"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:id="@+id/relativeLayout">
+
+        <ImageView
+            android:layout_width="5dp"
+            android:background="@android:color/black"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:background="@android:color/black"
+            android:layout_height="5dp"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/imageView_bus_exist"
+            android:layout_width="30dp"
+            android:layout_height="60dp"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:src="@drawable/bus_image"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+</RelativeLayout>
