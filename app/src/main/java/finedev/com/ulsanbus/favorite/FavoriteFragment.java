@@ -58,6 +58,7 @@ public class FavoriteFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        getActivity().setTitle(R.string.favorite);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class FavoriteFragment extends Fragment {
 //    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
+//            mListener.onBusStationItemSelect(uri);
 //        }
 //    }
 
@@ -92,7 +93,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-//        public void onFragmentInteraction(Uri uri);
+//        public void onBusStationItemSelect(Uri uri);
     }
 
 }

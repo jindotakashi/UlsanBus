@@ -78,7 +78,7 @@ public class BusInfo {
 
     public int getId() { return id;}
 
-    public String getRouteno() {
+    public String getRouteNo() {
         return routeno;
     }
     public String getBusType() { return bustype; }
@@ -138,7 +138,7 @@ public class BusInfo {
     }
 
     public String getBusSummary() {
-        return getRouteno() + "번 버스 [ 배차간격 : " + getBusInterval() + " ]";
+        return getRouteNo() + "번 버스 [ 배차간격 : " + getBusInterval() + " ]";
     }
 
     public String getBusOperationTimeForDisplay() {

@@ -68,6 +68,28 @@ public class DatabaseManager {
         return result;
     }
 
+    public BusInfo getBusInfo(String routeId) {
+        Cursor cursor =
+                sqliteDatabase.query(busTableName, // a. table
+                        BUS_TABLE_COLUMNS, // b. column names
+                        " routeid = ?", // c. selections
+                        new String[]{routeId}, // d. selections args
+                        null, // e. group by
+                        null, // f. having
+                        null, // g. order by
+                        null); // h. limit
+
+        // 3. if we got results get the first one
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if ( cursor.getCount() > 0 ) {
+                BusInfo busInfo = new BusInfo(cursor.getInt(cursor.getColumnIndex("id")), cursor.getString(cursor.getColumnIndex("routeid")), cursor.getString(cursor.getColumnIndex("routeno")), cursor.getString(cursor.getColumnIndex("routedir")), cursor.getString(cursor.getColumnIndex("routetype")), cursor.getString(cursor.getColumnIndex("bustype")), cursor.getString(cursor.getColumnIndex("buscompany")), cursor.getString(cursor.getColumnIndex("companytel")), cursor.getString(cursor.getColumnIndex("fstopname")), cursor.getString(cursor.getColumnIndex("tstopname")), cursor.getString(cursor.getColumnIndex("wd_start_time")), cursor.getString(cursor.getColumnIndex("wd_end_time")), cursor.getString(cursor.getColumnIndex("wd_max_interval")), cursor.getString(cursor.getColumnIndex("wd_min_interval")), cursor.getString(cursor.getColumnIndex("we_start_time")), cursor.getString(cursor.getColumnIndex("we_end_time")), cursor.getString(cursor.getColumnIndex("we_max_interval")), cursor.getString(cursor.getColumnIndex("we_min_interval")), cursor.getString(cursor.getColumnIndex("ws_start_time")), cursor.getString(cursor.getColumnIndex("ws_end_time")), cursor.getString(cursor.getColumnIndex("ws_max_interval")), cursor.getString(cursor.getColumnIndex("ws_min_interval")), cursor.getString(cursor.getColumnIndex("interval")), cursor.getString(cursor.getColumnIndex("traveltime")), cursor.getString(cursor.getColumnIndex("length")), cursor.getString(cursor.getColumnIndex("operationcnt")), cursor.getString(cursor.getColumnIndex("remark")));
+                return busInfo;
+            }
+        }
+        return null;
+    }
     public BusInfo getBusInfo(int id) {
         Cursor cursor =
                 sqliteDatabase.query(busTableName, // a. table
@@ -91,6 +113,28 @@ public class DatabaseManager {
         return null;
     }
 
+    public StationInfo getStationInfo(String stopId) {
+        Cursor cursor =
+                sqliteDatabase.query(stationTableName,
+                        STATION_TABLE_COLUMNS,
+                        " stopid = ?", // c. selections
+                        new String[]{stopId}, // d. selections args
+                        null, // e. group by
+                        null, // f. having
+                        null, // g. order by
+                        null); // h. limit
+
+        // 3. if we got results get the first one
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if ( cursor.getCount() > 0 ) {
+                StationInfo stationInfo = new StationInfo(cursor.getInt(cursor.getColumnIndex("id")), cursor.getString(cursor.getColumnIndex("stopid")), cursor.getString(cursor.getColumnIndex("stopname")), cursor.getString(cursor.getColumnIndex("stoplimousine")), cursor.getString(cursor.getColumnIndex("stopx")), cursor.getString(cursor.getColumnIndex("stopy")), cursor.getString(cursor.getColumnIndex("stopremark")));
+                return stationInfo;
+            }
+        }
+        return null;
+    }
     public StationInfo getStationInfo(int id) {
         Cursor cursor =
                 sqliteDatabase.query(stationTableName,

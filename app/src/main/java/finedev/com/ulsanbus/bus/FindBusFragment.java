@@ -19,6 +19,7 @@ import java.util.List;
 
 import finedev.com.ulsanbus.R;
 import finedev.com.ulsanbus.db.DatabaseManager;
+import finedev.com.ulsanbus.db.RecentHistoryDbHelper;
 
 
 /**
@@ -41,7 +42,7 @@ public class FindBusFragment extends Fragment {
     private PinnedSectionListView listViewBusList;
     private BusListAdapter busListAdapter;
 
-    private List<BusInfo> busItems;
+    private List<BusInfo> mBusItems;
 
     public static FindBusFragment newInstance(String param1, String param2) {
         FindBusFragment fragment = new FindBusFragment();
@@ -54,7 +55,8 @@ public class FindBusFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        busItems = new ArrayList<BusInfo>();
+        getActivity().setTitle(R.string.find_bus);
+        mBusItems = new ArrayList<BusInfo>();
     }
 
     @Override
@@ -68,7 +70,7 @@ public class FindBusFragment extends Fragment {
 
         textViewRecentSearchHistoryInBus = (TextView) rootView.findViewById(R.id.textView_recent_search_history_in_bus);
         listViewBusList = (PinnedSectionListView) rootView.findViewById(R.id.listView_bus_list);
-        busListAdapter = new BusListAdapter(getActivity(), R.layout.listitem_bus_list_item, busItems);
+        busListAdapter = new BusListAdapter(getActivity(), R.layout.listitem_bus_list_item, mBusItems);
         listViewBusList.setAdapter(busListAdapter);
         listViewBusList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -84,6 +86,12 @@ public class FindBusFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshListView();
+    }
+
     TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -93,25 +101,41 @@ public class FindBusFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable s) {
-            String text = s.toString();
-            busItems.clear();
-            if ( text.length() == 0 ) {
-                textViewRecentSearchHistoryInBus.setVisibility(View.VISIBLE);
-            } else {
-                textViewRecentSearchHistoryInBus.setVisibility(View.GONE);
-                DatabaseManager dbManager = new DatabaseManager(getActivity());
-                List<BusInfo> busList = dbManager.findBusList(text);
-                busItems.addAll(busList);
-                for ( int i=0; i<busItems.size(); i++ ) {
-                    if ( i == 0 || !busItems.get(i).getBusType().equals(busItems.get(i-1).getBusType())) {
-                        busItems.add(i, new BusInfo(busItems.get(i).getBusType()));
-                        i++;
-                    }
-                }
-            }
-            busListAdapter.notifyDataSetChanged();
+            refreshListView();
         }
     };
+    private void refreshListView() {
+        String text = editTextSearchBusNumber.getText().toString();
+        DatabaseManager dbManager = new DatabaseManager(getActivity());
+        if ( text.length() == 0 ) {
+            showRecentHistory();
+        } else {
+            textViewRecentSearchHistoryInBus.setVisibility(View.GONE);
+            List<BusInfo> busList = dbManager.findBusList(text);
+            mBusItems.clear();
+            mBusItems.addAll(busList);
+            for ( int i=0; i< mBusItems.size(); i++ ) {
+                if ( i == 0 || !mBusItems.get(i).getBusType().equals(mBusItems.get(i-1).getBusType())) {
+                    mBusItems.add(i, new BusInfo(mBusItems.get(i).getBusType()));
+                    i++;
+                }
+            }
+        }
+        busListAdapter.notifyDataSetChanged();
+    }
+
+    private void showRecentHistory() {
+        DatabaseManager dbManager = new DatabaseManager(getActivity());
+        textViewRecentSearchHistoryInBus.setVisibility(View.VISIBLE);
+        RecentHistoryDbHelper recentHistoryDbHelper = new RecentHistoryDbHelper(getActivity());
+        List<String> busRecentHistorys = recentHistoryDbHelper.getBusRecentHistory();
+        List<BusInfo> busItems = new ArrayList<BusInfo>();
+        for( String busId : busRecentHistorys ) {
+            busItems.add(dbManager.getBusInfo(busId));
+        }
+        mBusItems.clear();
+        mBusItems.addAll(busItems);
+    }
 
     @Override
     public void onAttach(Activity activity) {

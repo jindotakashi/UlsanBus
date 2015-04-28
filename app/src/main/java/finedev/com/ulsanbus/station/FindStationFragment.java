@@ -52,6 +52,7 @@ public class FindStationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle(R.string.find_station);
         stationItems = new ArrayList<StationInfo>();
     }
 

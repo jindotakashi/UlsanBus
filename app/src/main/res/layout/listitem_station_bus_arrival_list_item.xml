@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativelayout_main"
+    android:layout_width="fill_parent"
+    android:layout_height="40dp"
+    android:background="@drawable/drawer_selector">
+
+    <TextView
+        android:id="@+id/textView_const_arrival_info"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
+        android:text="@string/arrival_info"
+        />
+
+    <TextView
+        android:id="@+id/textView_arrival_info"
+        android:layout_toRightOf="@id/textView_const_arrival_info"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
+        android:text="@string/sample"/>
+
+</RelativeLayout>

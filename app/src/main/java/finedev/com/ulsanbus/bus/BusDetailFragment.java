@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.widget.ToggleButton;
 import com.loopj.android.http.SaxAsyncHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -28,12 +28,13 @@ import java.util.Set;
 
 import finedev.com.ulsanbus.R;
 import finedev.com.ulsanbus.db.DatabaseManager;
+import finedev.com.ulsanbus.db.RecentHistoryDbHelper;
 import finedev.com.ulsanbus.network.NetworkHelper;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BusDetailFragment.OnBusDetailItemSelectedListener} interface
+ * {@link finedev.com.ulsanbus.bus.BusDetailFragment.OnBusStationItemSelectedListener} interface
  * to handle interaction events.
  * Use the {@link BusDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -60,7 +61,7 @@ public class BusDetailFragment extends Fragment {
     private List<BusRouteInfo> mBusRouteItems;
     private BusRouteListAdapter mBusRouteListAdapter;
 
-    private OnBusDetailItemSelectedListener mListener;
+    private OnBusStationItemSelectedListener mListener;
 
     public static BusDetailFragment newInstance(int busInfoId) {
         BusDetailFragment fragment = new BusDetailFragment();
@@ -78,9 +79,14 @@ public class BusDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mBusInfoId = getArguments().getInt(ARG_PARAM_BUSINFO_ID);
+
             DatabaseManager dbManager = new DatabaseManager(getActivity());
             mBusInfo = dbManager.getBusInfo(mBusInfoId);
+
+            RecentHistoryDbHelper recentHistoryDbHelper = new RecentHistoryDbHelper(getActivity());
+            recentHistoryDbHelper.insertBusRecentHistory(mBusInfo.getRouteId());
         }
+        getActivity().setTitle(mBusInfo.getRouteNo()+"번 버스");
         mBusRouteItems = new ArrayList<BusRouteInfo>();
     }
 
@@ -130,21 +136,26 @@ public class BusDetailFragment extends Fragment {
         textViewBusSummary.setText( mBusInfo.getBusSummary() );
         textViewBusInterval.setText( mBusInfo.getBusOperationTimeForDisplay() );
 
-        mBusRouteListAdapter = new BusRouteListAdapter(getActivity(), R.layout.listitem_bus_route_list_item, mBusRouteItems);
+        mBusRouteListAdapter = new BusRouteListAdapter(
+                getActivity(),
+                R.layout.listitem_bus_route_list_item,
+                mBusRouteItems);
         listViewBusRoute.setAdapter(mBusRouteListAdapter);
         listViewBusRoute.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BusRouteInfo busRouteInfo = mBusRouteListAdapter.getItem(position);
+                mListener.onBusStationItemSelect(busRouteInfo.getStopId());
             }
         });
 
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getBusRouteInfo();
+        @Override
+        public void onResume() {
+            super.onResume();
+            getBusRouteInfo();
     }
 
     @Override
@@ -154,16 +165,18 @@ public class BusDetailFragment extends Fragment {
         super.onPause();
     }
 
-    private SaxAsyncHttpResponseHandler saxBusRouteAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler( new SaxBusRouteHandler() ) {
-        @Override
-        public void onSuccess(int i, Header[] headers, DefaultHandler defaultHandler) {
-            mBusRouteListAdapter.notifyDataSetChanged();
-            NetworkHelper.getBusLocationInfo(mCurrentRouteId, saxBusLocationAsyncHttpResponseHandler);
-        }
-        @Override
-        public void onFailure(int i, Header[] headers, DefaultHandler defaultHandler) {
-        }
-    };
+    private SaxAsyncHttpResponseHandler saxBusRouteAsyncHttpResponseHandler =
+            new SaxAsyncHttpResponseHandler(new SaxBusRouteHandler()) {
+                @Override
+                public void onSuccess(int i, Header[] headers, DefaultHandler defaultHandler) {
+                    mBusRouteListAdapter.notifyDataSetChanged();
+                    NetworkHelper.getBusLocationInfo(mCurrentRouteId, saxBusLocationAsyncHttpResponseHandler);
+                }
+
+                @Override
+                public void onFailure(int i, Header[] headers, DefaultHandler defaultHandler) {
+                }
+            };
 
     private SaxAsyncHttpResponseHandler saxBusLocationAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler( new SaxBusLocationHandler() ) {
 
@@ -236,24 +249,14 @@ public class BusDetailFragment extends Fragment {
 
         @Override
         public void endDocument() throws SAXException {
+            Log.i(LOG_TAG, "SaxBusRouteHandler::endDocument()");
             mBusRouteItems.clear();
             mBusRouteItems.addAll(busRouteItems);
-            Log.i(LOG_TAG, "SaxBusRouteHandler::endDocument()");
         }
-
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-//            super.startElement(uri, localName, qName, attributes);
-            if ( qName.equals("StopInfoTable")) {
-
-            }
-        }
-
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
             value = new String(ch, start, length).trim();
         }
-
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
 //            Log.i(LOG_TAG, "SaxBusRouteHandler::endElement()::qName="+qName);
@@ -272,22 +275,16 @@ public class BusDetailFragment extends Fragment {
         }
     }
 
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.OnBusDetailItemSelectedListener(uri);
-//        }
-//    }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-//        try {
-//            mListener = (OnBusDetailItemSelectedListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        try {
+            mListener = (OnBusStationItemSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnBusStationItemSelectedListener");
+        }
     }
 
     @Override
@@ -296,19 +293,8 @@ public class BusDetailFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnBusDetailItemSelectedListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    public interface OnBusStationItemSelectedListener {
+        public void onBusStationItemSelect(String stopId);
     }
 
 }

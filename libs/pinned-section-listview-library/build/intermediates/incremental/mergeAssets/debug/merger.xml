@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/ramju/Documents/workspace/android/tutorial_content_provider/UlsanBus/libs/pinned-section-listview-library/src/main/assets"/></dataSet><dataSet config="debug"><source path="/Users/ramju/Documents/workspace/android/tutorial_content_provider/UlsanBus/libs/pinned-section-listview-library/src/debug/assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="C:\workspace\android\UlsanBus\libs\pinned-section-listview-library\src\main\assets"/></dataSet><dataSet config="debug"><source path="C:\workspace\android\UlsanBus\libs\pinned-section-listview-library\src\debug\assets"/></dataSet></merger>

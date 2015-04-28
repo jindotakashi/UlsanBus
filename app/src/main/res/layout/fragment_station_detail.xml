@@ -1,8 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="finedev.com.ulsanbus.station.StationDetailFragment">
+    tools:context="finedev.com.ulsanbus.station.bus.StationDetailFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,4 +21,37 @@
 
     </RelativeLayout>
 
-</FrameLayout>
+    <RelativeLayout
+        android:id="@+id/relativeLayout_bus_arrival_info"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:visibility="invisible"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/textView_bus_arrival_info_bus_no"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sample"
+            />
+
+        <Button
+            android:id="@+id/button_show_bus_route_info"
+            android:layout_below="@id/textView_bus_arrival_info_bus_no"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/show_bus_route_info"/>
+
+        <ListView
+            android:id="@+id/listView_bus_arrival_info"
+            android:layout_below="@id/button_show_bus_route_info"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

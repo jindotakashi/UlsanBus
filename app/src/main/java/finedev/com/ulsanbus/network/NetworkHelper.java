@@ -45,6 +45,12 @@ public class NetworkHelper {
         Log.i(LOG_TAG, "getStationBusInfo()::url="+url);
         client.get(url, xmlResponseHandler);
     }
+
+    public static void getStationBusArrivalInfo(String routeId, String stopId, SaxAsyncHttpResponseHandler xmlResponseHandler) {
+        String url = "http://apis.its.ulsan.kr:8088/Service4.svc/RouteArrivalInfo.xo?ctype=A&routeid="+routeId+"&stopid="+stopId;
+        Log.i(LOG_TAG, "getStationBusArrivalInfo()::url="+url);
+        client.get(url, xmlResponseHandler);
+    }
 //
 
 //    public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {

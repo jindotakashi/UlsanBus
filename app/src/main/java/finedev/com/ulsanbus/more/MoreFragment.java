@@ -55,6 +55,7 @@ public class MoreFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle(R.string.more);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -71,7 +72,7 @@ public class MoreFragment extends Fragment {
 //    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
+//            mListener.onBusStationItemSelect(uri);
 //        }
 //    }
 
@@ -104,7 +105,7 @@ public class MoreFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-//        public void onFragmentInteraction(Uri uri);
+//        public void onBusStationItemSelect(Uri uri);
     }
 
 }

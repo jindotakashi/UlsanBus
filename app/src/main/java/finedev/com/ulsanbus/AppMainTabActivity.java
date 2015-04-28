@@ -1,11 +1,14 @@
 package finedev.com.ulsanbus;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TabHost;
 
@@ -14,14 +17,17 @@ import java.util.Stack;
 
 import finedev.com.ulsanbus.bus.BusDetailFragment;
 import finedev.com.ulsanbus.bus.FindBusFragment;
+import finedev.com.ulsanbus.db.DatabaseManager;
 import finedev.com.ulsanbus.favorite.FavoriteFragment;
 import finedev.com.ulsanbus.more.MoreFragment;
 import finedev.com.ulsanbus.station.FindStationFragment;
-import finedev.com.ulsanbus.station.StationDetailFragment;
+import finedev.com.ulsanbus.station.StationInfo;
+import finedev.com.ulsanbus.station.bus.StationDetailFragment;
 
-public class AppMainTabActivity extends FragmentActivity implements
+public class AppMainTabActivity extends AppCompatActivity implements
         FindBusFragment.OnBusItemSelectedListener,
-        FindStationFragment.OnStationItemSelectedListener {
+        FindStationFragment.OnStationItemSelectedListener,
+        BusDetailFragment.OnBusStationItemSelectedListener {
     /* Your Tab host */
     private TabHost mTabHost;
 
@@ -46,6 +52,7 @@ public class AppMainTabActivity extends FragmentActivity implements
             mStacks.put( getString(resourceId), new Stack<Fragment>() );
         }
 
+        setTitle(R.string.ulsan_bus);
         mTabHost                =   (TabHost)findViewById(android.R.id.tabhost);
         mTabHost.setOnTabChangedListener(listener);
         mTabHost.setup();
@@ -53,8 +60,17 @@ public class AppMainTabActivity extends FragmentActivity implements
         initializeTabs();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return true;
+    }
 
-//    private View createTabView(final int id) {
+    //    private View createTabView(final int id) {
 //        View view = LayoutInflater.from(this).inflate(R.layout.tabs_icon, null);
 //        ImageView imageView =   (ImageView) view.findViewById(R.id.tab_icon);
 //        imageView.setImageDrawable(getResources().getDrawable(id));
@@ -103,7 +119,6 @@ public class AppMainTabActivity extends FragmentActivity implements
         public void onTabChanged(String tabId) {
         /*Set current tab..*/
             mCurrentTab                     =   tabId;
-
             if(mStacks.get(tabId).size() == 0){
           /*
            *    First time this tab is selected. So add first fragment of that tab.
@@ -126,6 +141,7 @@ public class AppMainTabActivity extends FragmentActivity implements
            */
                 pushFragments(tabId, mStacks.get(tabId).lastElement(), false,false);
             }
+            notifyHomeButtonChanged();
         }
     };
 
@@ -154,6 +170,16 @@ public class AppMainTabActivity extends FragmentActivity implements
 //            ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         ft.replace(R.id.realtabcontent, fragment);
         ft.commit();
+
+        notifyHomeButtonChanged();
+    }
+
+    public void notifyHomeButtonChanged() {
+        if(mStacks.get(mCurrentTab).size() == 1){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        } else {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
 
@@ -173,6 +199,8 @@ public class AppMainTabActivity extends FragmentActivity implements
 //        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
         ft.replace(R.id.realtabcontent, fragment);
         ft.commit();
+
+        notifyHomeButtonChanged();
     }
 
 
@@ -217,5 +245,12 @@ public class AppMainTabActivity extends FragmentActivity implements
     @Override
     public void onStationItemClicked(int stationInfoId) {
         pushFragments(mCurrentTab, StationDetailFragment.newInstance(stationInfoId), false, true);
+    }
+
+    @Override
+    public void onBusStationItemSelect(String stopId) {
+        DatabaseManager dbManager = new DatabaseManager(this);
+        StationInfo stationInfo = dbManager.getStationInfo(stopId);
+        onStationItemClicked(stationInfo.getId());
     }
 }

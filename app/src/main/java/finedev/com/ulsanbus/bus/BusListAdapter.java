@@ -58,7 +58,7 @@ public class BusListAdapter extends ArrayAdapter<BusInfo> implements PinnedSecti
 
 
         if( busInfo.type == BusInfo.ITEM ) {
-            itemViewHolder.textViewBusNo.setText(busInfo.getRouteno());
+            itemViewHolder.textViewBusNo.setText(busInfo.getRouteNo());
             itemViewHolder.textViewBusRoute.setText(busInfo.getBusRoute());
             itemViewHolder.textViewBusInterval.setText(busInfo.getBusInterval());
         } else if( busInfo.type == BusInfo.SECTION ) {

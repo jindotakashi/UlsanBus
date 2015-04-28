@@ -1,4 +1,4 @@
-package finedev.com.ulsanbus.station;
+package finedev.com.ulsanbus.station.bus;
 
 import android.app.Activity;
 import android.content.Context;
@@ -41,9 +41,9 @@ public class StationBusListAdapter extends ArrayAdapter<StationBusInfo> {
         } else {
             itemViewHolder = (ItemViewHolder) view.getTag();
         }
-        itemViewHolder.textViewBusRouteNo.setText(stationBusInfo.getStopId());
-        itemViewHolder.textViewBusRoute.setText(stationBusInfo.getStopName());
-        itemViewHolder.textViewBusArrivalInfo.setText(stationBusInfo.getStopName());
+        itemViewHolder.textViewBusRouteNo.setText(stationBusInfo.getBusInfo().getRouteNo());
+        itemViewHolder.textViewBusRoute.setText(stationBusInfo.getBusInfo().getBusRoute());
+        itemViewHolder.textViewBusArrivalInfo.setText(stationBusInfo.getBusArrivalInfo());
 
         return view;
     }
