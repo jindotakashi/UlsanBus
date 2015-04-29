@@ -18,6 +18,7 @@ import java.util.List;
 
 import finedev.com.ulsanbus.R;
 import finedev.com.ulsanbus.db.DatabaseManager;
+import finedev.com.ulsanbus.db.RecentHistoryDbHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,7 +40,7 @@ public class FindStationFragment extends Fragment {
     private ListView listViewStationList;
     private StationListAdapter stationListAdapter;
 
-    private List<StationInfo> stationItems;
+    private List<StationInfo> mStationItems;
 
     public static FindStationFragment newInstance(String param1, String param2) {
         FindStationFragment fragment = new FindStationFragment();
@@ -53,7 +54,7 @@ public class FindStationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle(R.string.find_station);
-        stationItems = new ArrayList<StationInfo>();
+        mStationItems = new ArrayList<StationInfo>();
     }
 
     @Override
@@ -66,7 +67,7 @@ public class FindStationFragment extends Fragment {
 
         textViewRecentSearchHistoryInStation    = (TextView) rootView.findViewById(R.id.textView_recent_search_history_in_station);
         listViewStationList                     = (ListView) rootView.findViewById(R.id.listView_station_list);
-        stationListAdapter                      = new StationListAdapter(getActivity(), R.layout.listitem_station_list_item, stationItems);
+        stationListAdapter                      = new StationListAdapter(getActivity(), R.layout.listitem_station_list_item, mStationItems);
 
         listViewStationList.setAdapter(stationListAdapter);
         listViewStationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -81,6 +82,12 @@ public class FindStationFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshListView();
+    }
+
     TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -90,19 +97,36 @@ public class FindStationFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable s) {
-            String text = s.toString();
-            stationItems.clear();
-            if ( text.length() == 0 ) {
-                textViewRecentSearchHistoryInStation.setVisibility(View.VISIBLE);
-            } else {
-                textViewRecentSearchHistoryInStation.setVisibility(View.GONE);
-                DatabaseManager dbManager = new DatabaseManager(getActivity());
-                List<StationInfo> stationList = dbManager.findStationList(text);
-                stationItems.addAll(stationList);
-            }
-            stationListAdapter.notifyDataSetChanged();
+            refreshListView();
         }
     };
+
+    private void refreshListView() {
+        String text = editTextSearchStation.getText().toString();
+        DatabaseManager dbManager = new DatabaseManager(getActivity());
+        mStationItems.clear();
+        if ( text.length() == 0 ) {
+            showRecentHistory();
+        } else {
+            textViewRecentSearchHistoryInStation.setVisibility(View.GONE);
+            List<StationInfo> stationList = dbManager.findStationList(text);
+            mStationItems.addAll(stationList);
+        }
+        stationListAdapter.notifyDataSetChanged();
+    }
+
+    private void showRecentHistory() {
+        DatabaseManager dbManager = new DatabaseManager(getActivity());
+        textViewRecentSearchHistoryInStation.setVisibility(View.VISIBLE);
+        RecentHistoryDbHelper recentHistoryDbHelper = new RecentHistoryDbHelper(getActivity());
+        List<String> stationRecentHistorys = recentHistoryDbHelper.getStationRecentHistory();
+        List<StationInfo> stationItems = new ArrayList<StationInfo>();
+        for( String stationId : stationRecentHistorys ) {
+            stationItems.add(dbManager.getStationInfo(stationId));
+        }
+        mStationItems.clear();
+        mStationItems.addAll(stationItems);
+    }
 
     @Override
     public void onAttach(Activity activity) {

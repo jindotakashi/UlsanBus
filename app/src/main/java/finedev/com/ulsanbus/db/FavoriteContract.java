@@ -16,6 +16,8 @@ public class FavoriteContract {
         public static final String TABLE_NAME = "favorite_bus";
 
         public static final String COLUMN_BUS_ID = "bus_id";
+
+        public static final String[] TABLE_COLUMNS = {COLUMN_BUS_ID};
     }
 
     public static final class StationEntry implements BaseColumns {
@@ -23,6 +25,7 @@ public class FavoriteContract {
 
         public static final String COLUMN_STATION_ID = "station_id";
 
+        public static final String[] TABLE_COLUMNS = {COLUMN_STATION_ID};
     }
 
 }

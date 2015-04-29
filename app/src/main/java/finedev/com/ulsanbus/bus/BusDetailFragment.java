@@ -1,12 +1,14 @@
 package finedev.com.ulsanbus.bus;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,6 +30,7 @@ import java.util.Set;
 
 import finedev.com.ulsanbus.R;
 import finedev.com.ulsanbus.db.DatabaseManager;
+import finedev.com.ulsanbus.db.FavoriteDbHelper;
 import finedev.com.ulsanbus.db.RecentHistoryDbHelper;
 import finedev.com.ulsanbus.network.NetworkHelper;
 
@@ -63,6 +66,13 @@ public class BusDetailFragment extends Fragment {
 
     private OnBusStationItemSelectedListener mListener;
 
+    private MenuItem mMenuRefresh;
+    private MenuItem mMenuFavorite;
+
+    private boolean isFavorited;
+    private FavoriteDbHelper mFavoriteDbHelper;
+    private DatabaseManager mDatabaseManager;
+
     public static BusDetailFragment newInstance(int busInfoId) {
         BusDetailFragment fragment = new BusDetailFragment();
         Bundle args = new Bundle();
@@ -75,19 +85,65 @@ public class BusDetailFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_favorite_refresh, menu);
+        mMenuRefresh = menu.findItem(R.id.menu_refresh);
+        mMenuFavorite = menu.findItem(R.id.menu_favorite);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        setFavoriteMenuIcon();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if ( item.getItemId() == R.id.menu_refresh ) {
+            getBusRouteInfo();
+        } else if ( item.getItemId() == R.id.menu_favorite ) {
+            if ( isFavorited ) {
+                mFavoriteDbHelper.deleteBusFavorite(mBusInfo.getRouteId());
+            } else {
+                mFavoriteDbHelper.insertBusFavorite(mBusInfo.getRouteId());
+            }
+            setFavoriteMenuIcon();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setFavoriteMenuIcon() {
+        isFavorited = mFavoriteDbHelper.isExistBusFavorite(mBusInfo.getRouteId());
+        if ( isFavorited ) {
+            mMenuFavorite.setIcon(R.drawable.abc_btn_rating_star_on_mtrl_alpha);
+        } else {
+            mMenuFavorite.setIcon(R.drawable.abc_btn_rating_star_off_mtrl_alpha);
+        }
+    }
+
+    private void setRefreshMenuProgress(boolean progress) {
+        if ( progress ) {
+            MenuItemCompat.setActionView(mMenuRefresh, R.layout.actionbar_indeterminate_progress);
+        } else {
+            MenuItemCompat.setActionView(mMenuRefresh, null);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDatabaseManager = new DatabaseManager(getActivity());
+        mFavoriteDbHelper = new FavoriteDbHelper(getActivity());
         if (getArguments() != null) {
             mBusInfoId = getArguments().getInt(ARG_PARAM_BUSINFO_ID);
-
-            DatabaseManager dbManager = new DatabaseManager(getActivity());
-            mBusInfo = dbManager.getBusInfo(mBusInfoId);
-
+            mBusInfo = mDatabaseManager.getBusInfo(mBusInfoId);
             RecentHistoryDbHelper recentHistoryDbHelper = new RecentHistoryDbHelper(getActivity());
             recentHistoryDbHelper.insertBusRecentHistory(mBusInfo.getRouteId());
         }
         getActivity().setTitle(mBusInfo.getRouteNo()+"번 버스");
         mBusRouteItems = new ArrayList<BusRouteInfo>();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -152,10 +208,10 @@ public class BusDetailFragment extends Fragment {
         return view;
     }
 
-        @Override
-        public void onResume() {
-            super.onResume();
-            getBusRouteInfo();
+    @Override
+    public void onResume() {
+        super.onResume();
+        getBusRouteInfo();
     }
 
     @Override
@@ -167,6 +223,19 @@ public class BusDetailFragment extends Fragment {
 
     private SaxAsyncHttpResponseHandler saxBusRouteAsyncHttpResponseHandler =
             new SaxAsyncHttpResponseHandler(new SaxBusRouteHandler()) {
+
+                @Override
+                public void onStart() {
+                    super.onStart();
+                    setRefreshMenuProgress(true);
+                }
+
+                @Override
+                public void onFinish() {
+                    setRefreshMenuProgress(false);
+                    super.onFinish();
+                }
+
                 @Override
                 public void onSuccess(int i, Header[] headers, DefaultHandler defaultHandler) {
                     mBusRouteListAdapter.notifyDataSetChanged();
@@ -179,6 +248,16 @@ public class BusDetailFragment extends Fragment {
             };
 
     private SaxAsyncHttpResponseHandler saxBusLocationAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler( new SaxBusLocationHandler() ) {
+
+        @Override
+        public void onStart() {
+            setRefreshMenuProgress(true);
+        }
+
+        @Override
+        public void onFinish() {
+            setRefreshMenuProgress(false);
+        }
 
         @Override
         public void onSuccess(int i, Header[] headers, DefaultHandler defaultHandler) {

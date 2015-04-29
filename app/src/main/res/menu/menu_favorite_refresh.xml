@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/menu_refresh"
+        android:alphabeticShortcut="r"
+        android:icon="@drawable/ic_action_refresh"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:title="@string/menuitem_refresh" />
+
+    <item
+        android:id="@+id/menu_favorite"
+        android:alphabeticShortcut="r"
+        android:icon="@drawable/abc_btn_rating_star_off_mtrl_alpha"
+        android:orderInCategory="2"
+        app:showAsAction="always"
+        android:title="@string/menuitem_favorite" />
+</menu>
