@@ -25,7 +25,7 @@
         android:id="@+id/relativeLayout_bus_arrival_info"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:visibility="invisible"
         android:background="@android:color/white">
 
@@ -33,9 +33,14 @@
             android:id="@+id/textView_bus_arrival_info_bus_no"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:text="@string/sample"
+            android:padding="5dp"
+            android:textColor="@color/primary_text_default_material_dark"
+            android:background="@color/MIDNIGHTBLUE"
             />
 
         <Button
@@ -46,10 +51,11 @@
             android:text="@string/show_bus_route_info"/>
 
         <ListView
+            android:padding="5dp"
             android:id="@+id/listView_bus_arrival_info"
             android:layout_below="@id/button_show_bus_route_info"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="160dp"/>
 
 
     </RelativeLayout>

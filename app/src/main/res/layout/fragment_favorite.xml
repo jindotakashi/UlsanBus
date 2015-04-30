@@ -3,8 +3,15 @@
     android:layout_height="match_parent"
     tools:context="finedev.com.ulsanbus.favorite.FavoriteFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <com.hb.views.PinnedSectionListView
+        android:id="@+id/listView_favorite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clipToPadding="false"
+        android:divider="#fff4f4f4"
+        android:dividerHeight="0.1dp"
+        android:fastScrollEnabled="true"
+        android:scrollbars="none" />
 
 </FrameLayout>

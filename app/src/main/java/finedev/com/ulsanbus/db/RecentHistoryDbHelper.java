@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,7 +51,15 @@ public class RecentHistoryDbHelper extends SQLiteOpenHelper {
     public void insertBusRecentHistory(String busId) {
         ContentValues values = new ContentValues();
         values.put(RecentHistoryContract.BusEntry.COLUMN_BUS_ID, busId );
+        deleteBusRecentHistory(busId);
         sqliteDatabase.insert(RecentHistoryContract.BusEntry.TABLE_NAME, null, values);
+    }
+
+    public void deleteBusRecentHistory(String busId) {
+        sqliteDatabase.delete(
+                RecentHistoryContract.BusEntry.TABLE_NAME,
+                RecentHistoryContract.BusEntry.COLUMN_BUS_ID + "=?",
+                new String[]{busId});
     }
 
     public List<String> getBusRecentHistory() {
@@ -75,6 +84,47 @@ public class RecentHistoryDbHelper extends SQLiteOpenHelper {
             }
 
         }
+        Collections.reverse(result);
+        return result;
+    }
+
+    public void insertStationRecentHistory(String stationId) {
+        ContentValues values = new ContentValues();
+        values.put(RecentHistoryContract.StationEntry.COLUMN_STATION_ID, stationId );
+        deleteStationRecentHistory(stationId);
+        sqliteDatabase.insert(RecentHistoryContract.StationEntry.TABLE_NAME, null, values);
+    }
+
+    public void deleteStationRecentHistory(String stationId) {
+        sqliteDatabase.delete(
+                RecentHistoryContract.StationEntry.TABLE_NAME,
+                RecentHistoryContract.StationEntry.COLUMN_STATION_ID + "=?",
+                new String[]{stationId});
+    }
+
+    public List<String> getStationRecentHistory() {
+        List<String> result = new ArrayList<String>();
+        Cursor cursor =
+                sqliteDatabase.query(RecentHistoryContract.StationEntry.TABLE_NAME, // a. table
+                        RecentHistoryContract.StationEntry.TABLE_COLUMNS, // b. column names
+                        null, // c. selections
+                        null, // d. selections args
+                        null, // e. group by
+                        null, // f. having
+                        null, // g. order by
+                        null); // h. limit
+
+        // 3. if we got results get the first one
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String stationId = cursor.getString(cursor.getColumnIndex(RecentHistoryContract.StationEntry.COLUMN_STATION_ID));
+                result.add(stationId);
+                cursor.moveToNext();
+            }
+
+        }
+        Collections.reverse(result);
         return result;
     }
 }

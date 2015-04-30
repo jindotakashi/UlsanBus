@@ -3,10 +3,15 @@ package finedev.com.ulsanbus.station.bus;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -25,6 +30,8 @@ import java.util.List;
 import finedev.com.ulsanbus.R;
 import finedev.com.ulsanbus.bus.FindBusFragment;
 import finedev.com.ulsanbus.db.DatabaseManager;
+import finedev.com.ulsanbus.db.FavoriteDbHelper;
+import finedev.com.ulsanbus.db.RecentHistoryDbHelper;
 import finedev.com.ulsanbus.network.NetworkHelper;
 import finedev.com.ulsanbus.station.StationInfo;
 import finedev.com.ulsanbus.station.bus.arrival.StationBusArrivalInfo;
@@ -59,6 +66,8 @@ public class StationDetailFragment extends Fragment {
     private FindBusFragment.OnBusItemSelectedListener mListener;
     private StationBusInfo mStationBusInfo;
 
+    private boolean isFavorited;
+    private FavoriteDbHelper mFavoriteDbHelper;
 
     public static StationDetailFragment newInstance(int stationInfoId) {
         StationDetailFragment fragment = new StationDetailFragment();
@@ -71,18 +80,72 @@ public class StationDetailFragment extends Fragment {
     public StationDetailFragment() {
     }
 
+    private MenuItem mMenuRefresh;
+    private MenuItem mMenuFavorite;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_favorite_refresh, menu);
+        mMenuRefresh = menu.findItem(R.id.menu_refresh);
+        mMenuFavorite = menu.findItem(R.id.menu_favorite);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        setFavoriteMenuIcon();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if ( item.getItemId() == R.id.menu_refresh ) {
+            getStationBusInfo();
+        } else if ( item.getItemId() == R.id.menu_favorite ) {
+            if ( isFavorited ) {
+                mFavoriteDbHelper.deleteStationFavorite(mStationInfo.getStopId());
+            } else {
+                mFavoriteDbHelper.insertStationFavorite(mStationInfo.getStopId());
+            }
+            setFavoriteMenuIcon();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setFavoriteMenuIcon() {
+        isFavorited = mFavoriteDbHelper.isExistStationFavorite(mStationInfo.getStopId());
+        if ( isFavorited ) {
+            mMenuFavorite.setIcon(R.drawable.abc_btn_rating_star_on_mtrl_alpha);
+        } else {
+            mMenuFavorite.setIcon(R.drawable.abc_btn_rating_star_off_mtrl_alpha);
+        }
+    }
+
+    private void setRefreshMenuProgress(boolean progress) {
+        if ( progress ) {
+            MenuItemCompat.setActionView(mMenuRefresh, R.layout.actionbar_indeterminate_progress);
+        } else {
+            MenuItemCompat.setActionView(mMenuRefresh, null);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDatabaseManager = new DatabaseManager(getActivity());
+        mFavoriteDbHelper = new FavoriteDbHelper(getActivity());
         if (getArguments() != null) {
             mStationInfoId = getArguments().getInt(ARG_PARAM_STATIONINFO_ID);
-            DatabaseManager dbManager = new DatabaseManager(getActivity());
-            mStationInfo = dbManager.getStationInfo(mStationInfoId);
+
+            mStationInfo = mDatabaseManager.getStationInfo(mStationInfoId);
+
+            RecentHistoryDbHelper recentHistoryDbHelper = new RecentHistoryDbHelper(getActivity());
+            recentHistoryDbHelper.insertStationRecentHistory(mStationInfo.getStopId());
         }
         getActivity().setTitle(mStationInfo.getStopName()+"["+mStationInfo.getStopId()+"]");
         mStationBusItems = new ArrayList<StationBusInfo>();
         mStationBusArrivalItems = new ArrayList<StationBusArrivalInfo>();
-        mDatabaseManager = new DatabaseManager(getActivity());
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -102,6 +165,17 @@ public class StationDetailFragment extends Fragment {
                 mStationBusInfo = mStationBusListAdapter.getItem(position);
                 textViewBusArrivalInfoBusNo.setText(mStationBusInfo.getBusInfo().getRouteNo());
                 NetworkHelper.getStationBusArrivalInfo(mStationBusInfo.getRouteid(), mStationInfo.getStopId(), saxStationBusArrivalAsyncHttpResponseHandler);
+            }
+        });
+        listViewStationBus.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
 
@@ -130,8 +204,16 @@ public class StationDetailFragment extends Fragment {
                 @Override
                 public void onStart() {
                     super.onStart();
+                    setRefreshMenuProgress(true);
                     relativeLayoutBusArrivalInfo.setVisibility(View.INVISIBLE);
                 }
+
+                @Override
+                public void onFinish() {
+                    setRefreshMenuProgress(false);
+                    super.onFinish();
+                }
+
                 @Override
                 public void onSuccess(int i, Header[] headers, DefaultHandler defaultHandler) {
                     mStationBusArrivalListAdapter.notifyDataSetChanged();
@@ -165,7 +247,7 @@ public class StationDetailFragment extends Fragment {
         public void endDocument() throws SAXException {
             Log.i(LOG_TAG, "SaxStationBusArrivalHandler::endDocument()");
             mStationBusArrivalItems.clear();
-            mStationBusArrivalItems.addAll(stationBusArrivalItems);
+            mStationBusArrivalItems.addAll(stationBusArrivalItems.subList(0,4));
         }
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
@@ -213,11 +295,23 @@ public class StationDetailFragment extends Fragment {
     private SaxAsyncHttpResponseHandler saxStationBusAsyncHttpResponseHandler =
             new SaxAsyncHttpResponseHandler(new SaxStationBusHandler()) {
                 @Override
+                public void onStart() {
+                    super.onStart();
+                    setRefreshMenuProgress(true);
+                }
+
+                @Override
+                public void onFinish() {
+                    setRefreshMenuProgress(false);
+                    super.onFinish();
+                }
+                @Override
                 public void onSuccess(int i, Header[] headers, DefaultHandler defaultHandler) {
                     mStationBusListAdapter.notifyDataSetChanged();
                 }
                 @Override
                 public void onFailure(int i, Header[] headers, DefaultHandler defaultHandler) {
+                    getStationBusInfo();
                 }
             };
 

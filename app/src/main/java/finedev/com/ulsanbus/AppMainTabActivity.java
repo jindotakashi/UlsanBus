@@ -27,7 +27,8 @@ import finedev.com.ulsanbus.station.bus.StationDetailFragment;
 public class AppMainTabActivity extends AppCompatActivity implements
         FindBusFragment.OnBusItemSelectedListener,
         FindStationFragment.OnStationItemSelectedListener,
-        BusDetailFragment.OnBusStationItemSelectedListener {
+        BusDetailFragment.OnBusStationItemSelectedListener,
+        FavoriteFragment.OnFavoriteItemSelectedListener {
     /* Your Tab host */
     private TabHost mTabHost;
 
@@ -67,7 +68,7 @@ public class AppMainTabActivity extends AppCompatActivity implements
                 onBackPressed();
                 break;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     //    private View createTabView(final int id) {

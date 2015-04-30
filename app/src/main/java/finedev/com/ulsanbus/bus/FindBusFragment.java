@@ -39,7 +39,7 @@ public class FindBusFragment extends Fragment {
     private EditText editTextSearchBusNumber;
     private TextView textViewRecentSearchHistoryInBus;
 
-    private PinnedSectionListView listViewBusList;
+    private PinnedSectionListView listViewBus;
     private BusListAdapter busListAdapter;
 
     private List<BusInfo> mBusItems;
@@ -69,13 +69,13 @@ public class FindBusFragment extends Fragment {
         editTextSearchBusNumber.addTextChangedListener(textWatcher);
 
         textViewRecentSearchHistoryInBus = (TextView) rootView.findViewById(R.id.textView_recent_search_history_in_bus);
-        listViewBusList = (PinnedSectionListView) rootView.findViewById(R.id.listView_bus_list);
+        listViewBus = (PinnedSectionListView) rootView.findViewById(R.id.listView_bus_list);
         busListAdapter = new BusListAdapter(getActivity(), R.layout.listitem_bus_list_item, mBusItems);
-        listViewBusList.setAdapter(busListAdapter);
-        listViewBusList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewBus.setAdapter(busListAdapter);
+        listViewBus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if ( busListAdapter.getItemViewType(position) == BusInfo.ITEM ) {
+                if (busListAdapter.getItemViewType(position) == BusInfo.ITEM) {
                     BusInfo busInfo = busListAdapter.getItem(position);
                     mListener.onBusItemSelected(busInfo.getId());
                 }

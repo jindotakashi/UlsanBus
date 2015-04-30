@@ -59,7 +59,12 @@
             android:id="@+id/textView_recent_search_history_in_bus"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/recent_search_history" />
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/recent_search_history"
+            android:textColor="@color/list_header_text_color"
+            android:textSize="13sp" />
 
         <FrameLayout
             android:layout_width="fill_parent"
