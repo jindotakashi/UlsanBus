@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_height">
+    android:layout_height="@dimen/list_item_height"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp" >
 
     <TextView
         android:id="@+id/textView_bus_no"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="#ff0d0d0d"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
         android:text="@string/sample"
         />
 

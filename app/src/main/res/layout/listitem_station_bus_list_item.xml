@@ -14,24 +14,25 @@
         <TextView
             android:id="@+id/textView_bus_route_no"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:singleLine="true"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            android:gravity="center_vertical"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:gravity="center_vertical"></TextView>
 
         <TextView
             android:id="@+id/textView_bus_route"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:singleLine="true"
+            android:visibility="invisible"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            android:gravity="center_vertical"
-            android:textSize="14sp" />
+            android:textSize="16sp"
+            android:gravity="center_vertical"></TextView>
 
     </LinearLayout>
 

@@ -14,12 +14,14 @@ import finedev.com.ulsanbus.R;
 
 public class StationBusListAdapter extends ArrayAdapter<StationBusInfo> {
 
-    LayoutInflater mLayoutLinflater;
-    int mResource;
+    private Context mContext;
+    private LayoutInflater mLayoutLinflater;
+    private int mResource;
     private List<StationBusInfo> mItems;
 
     public StationBusListAdapter(Context context, int resource, List<StationBusInfo> items) {
         super(context, resource, items);
+        mContext = context;
         mResource = resource;
         mLayoutLinflater = ((Activity) context).getLayoutInflater();
         mItems = items;
@@ -44,6 +46,13 @@ public class StationBusListAdapter extends ArrayAdapter<StationBusInfo> {
         itemViewHolder.textViewBusRouteNo.setText(stationBusInfo.getBusInfo().getRouteNo());
         itemViewHolder.textViewBusRoute.setText(stationBusInfo.getBusInfo().getBusRoute());
         itemViewHolder.textViewBusArrivalInfo.setText(stationBusInfo.getBusArrivalInfo());
+        if ( stationBusInfo.getArrivalInfoType() == StationBusInfo.ARRIVAL_INFO_TYPE_END ) {
+            itemViewHolder.textViewBusArrivalInfo.setTextColor(mContext.getResources().getColor(R.color.list_header_text_color));
+        } else if ( stationBusInfo.getArrivalInfoType() == StationBusInfo.ARRIVAL_INFO_TYPE_SOON ) {
+            itemViewHolder.textViewBusArrivalInfo.setTextColor(mContext.getResources().getColor(R.color.ARRIVE));
+        } else if ( stationBusInfo.getArrivalInfoType() == StationBusInfo.ARRIVAL_INFO_TYPE_SCHEDULE ) {
+            itemViewHolder.textViewBusArrivalInfo.setTextColor(mContext.getResources().getColor(R.color.GREENSEA));
+        }
 
         return view;
     }

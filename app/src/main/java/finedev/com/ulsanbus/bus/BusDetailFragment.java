@@ -244,6 +244,7 @@ public class BusDetailFragment extends Fragment {
 
                 @Override
                 public void onFailure(int i, Header[] headers, DefaultHandler defaultHandler) {
+                    getBusRouteInfo();
                 }
             };
 

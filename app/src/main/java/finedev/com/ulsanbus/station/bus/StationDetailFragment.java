@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -166,6 +167,17 @@ public class StationDetailFragment extends Fragment {
                 NetworkHelper.getStationBusArrivalInfo(mStationBusInfo.getRouteid(), mStationInfo.getStopId(), saxStationBusArrivalAsyncHttpResponseHandler);
             }
         });
+        listViewStationBus.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
 
         relativeLayoutBusArrivalInfo = (RelativeLayout) view.findViewById(R.id.relativeLayout_bus_arrival_info);
         textViewBusArrivalInfoBusNo = (TextView) view.findViewById(R.id.textView_bus_arrival_info_bus_no);
@@ -235,7 +247,7 @@ public class StationDetailFragment extends Fragment {
         public void endDocument() throws SAXException {
             Log.i(LOG_TAG, "SaxStationBusArrivalHandler::endDocument()");
             mStationBusArrivalItems.clear();
-            mStationBusArrivalItems.addAll(stationBusArrivalItems);
+            mStationBusArrivalItems.addAll(stationBusArrivalItems.subList(0,4));
         }
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
@@ -299,6 +311,7 @@ public class StationDetailFragment extends Fragment {
                 }
                 @Override
                 public void onFailure(int i, Header[] headers, DefaultHandler defaultHandler) {
+                    getStationBusInfo();
                 }
             };
 
